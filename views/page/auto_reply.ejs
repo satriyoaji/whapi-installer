@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-md-3 mb-3">
+       <div class="card user-card">
+            <div class="card-body">
+                <div class="form-group">
+                    <h5><i class="fad fa-comments"></i> <%= lingua.auto_reply.title %></h5>
+                    <label><%= lingua.log_api_page.desc_choose_device %></label>
+                    <select class="form-control" id="id_device">
+                        <option value="">- <%= lingua.log_api_page.desc_choose_device2 %> -</option>
+                        <%
+                            if(device.length > 0){
+                                for(var i=0; i < device.length; i++){
+                        %>
+                            <option value="<%= device[i].apiKey %>"><%= device[i].nameDevice %></option>
+                        <%
+                                }
+                            }
+                        %>
+                    </select>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="card user-card">
+             <div class="card-body" id="load_keyword">
+                <%= lingua.log_device_backend.desc_load_report %>
+             </div> 
+         </div>
+     </div>
+</div>
+
+<script>
+    $(document).ready( function () {
+        $("#id_device").change(function(){
+            $.ajax({
+                url: '../user/loadKeyword',
+                type: 'post',
+                data: "apiKey=" + $("#id_device").val(),
+                success: function(e) {
+                    $("#load_keyword").html(e);
+                },
+                error: function(xhr, status, error) {
+                    loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+                }
+            });
+        });
+    });
+</script>

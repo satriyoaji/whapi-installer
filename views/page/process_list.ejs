@@ -1,0 +1,133 @@
+<div id="load_pid">
+    <div class="card user-card">
+        <div class="card-body">
+          <div class="alert alert-info" role="alert">
+            <%= lingua.process_page.desc_process %>
+          </div>
+          <h4>Process List</h4>
+          <hr/>
+          <table class="table table-bordered table-striped mb-3">
+            <tr>
+              <td><b>CPU</b></td>
+              <td id="cpu">...</td>
+            </tr>
+            <tr>
+              <td><b>WHAPI Usage</b></td>
+              <td id="ram_whapi">...</td>
+            </tr>
+            <tr>
+              <td><b>RAM Usage</b></td>
+              <td id="ram_usage">...</td>
+            </tr>
+            <tr>
+              <td><b>Free RAM</b></td>
+              <td id="ram_free">...</td>
+            </tr>
+          </table>
+          <h4>NodeJS</h4>
+          <hr/>
+          <table class="table table-bordered table-striped">
+            <tr>
+              <td><b>Version</b></td>
+              <td id="node_version">...</td>
+            </tr>
+            <tr>
+              <td><b>Arch</b></td>
+              <td id="node_arch">...</td>
+            </tr>
+            <tr>
+              <td><b>Platform</b></td>
+              <td id="node_platform">...</td>
+            </tr>
+            <tr>
+              <td><b>PID</b></td>
+              <td id="node_pid">...</td>
+            </tr>
+            <tr>
+              <td><b>PM2 ID</b></td>
+              <td id="node_pm2id">...</td>
+            </tr>
+          </table>
+          <h4>Database Activity</h4>
+          <hr/>
+          <table class="table table-bordered table-striped">
+            <tr>
+              <td colspan="4" align="center"><b>NeDB</b></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><b>Seconds</b></td>
+              <td><b>Minutes</b></td>
+              <td><b>Total</b></td>
+            </tr>
+            <tr>
+              <td><b>Read</b></td>
+              <td id="read_seconds_nedb">...</td>
+              <td id="read_minutes_nedb">...</td>
+              <td id="read_total_nedb">...</td>
+            </tr>
+            <tr>
+              <td><b>Write</b></td>
+              <td id="write_seconds_nedb">...</td>
+              <td id="write_minutes_nedb">...</td>
+              <td id="write_total_nedb">...</td>
+            </tr>
+            <tr>
+              <td colspan="4" align="center"><b>Whatsapp</b></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><b>Seconds</b></td>
+              <td><b>Minutes</b></td>
+              <td><b>Total</b></td>
+            </tr>
+            <tr>
+              <td><b>Read</b></td>
+              <td id="read_seconds_wa">...</td>
+              <td id="read_minutes_wa">...</td>
+              <td id="read_total_wa">...</td>
+            </tr>
+            <tr>
+              <td><b>Write</b></td>
+              <td id="write_seconds_wa">...</td>
+              <td id="write_minutes_wa">...</td>
+              <td id="write_total_wa">...</td>
+            </tr>
+          </table>
+        </div>
+    </div>
+</div>
+<script>
+    loadStatistic()
+
+    function loadStatistic(){
+      $.get('../user/system-info', (e) => {
+        loadToast('success', "<%= lingua.process_page.desc_success_load %>")
+        $('#cpu').html(e.cpu + " %")
+        $('#ram_whapi').html(e.memory.whapi_usage + " Mb")
+        $('#ram_usage').html(e.memory.total_usage + " Mb")
+        $('#ram_free').html(e.memory.total_free + " Mb")
+        $('#node_version').html(e.node.v)
+        $('#node_arch').html(e.node.arch)
+        $('#node_platform').html(e.node.platform)
+        $('#node_pid').html(e.node.pid)
+        $('#node_pm2id').html(e.node.pm2_id)
+        // Stats NeDB
+        $('#read_seconds_nedb').html(e.db_count.nedb.read.seconds)
+        $('#read_minutes_nedb').html(e.db_count.nedb.read.minutes)
+        $('#read_total_nedb').html(e.db_count.nedb.read.total)
+        $('#write_seconds_nedb').html(e.db_count.nedb.write.seconds)
+        $('#write_minutes_nedb').html(e.db_count.nedb.write.minutes)
+        $('#write_total_nedb').html(e.db_count.nedb.write.total)
+        // Stats WA
+        $('#read_seconds_wa').html(e.db_count.wa.read.seconds)
+        $('#read_minutes_wa').html(e.db_count.wa.read.minutes)
+        $('#read_total_wa').html(e.db_count.wa.read.total)
+        $('#write_seconds_wa').html(e.db_count.wa.write.seconds)
+        $('#write_minutes_wa').html(e.db_count.wa.write.minutes)
+        $('#write_total_wa').html(e.db_count.wa.write.total)
+      }).fail(function() {
+        loadToast('danger', "<%= lingua.process_page.desc_error %>")
+      })
+    }
+</script>

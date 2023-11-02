@@ -1,0 +1,91 @@
+<form id="edit-keyword" method="post">
+    <input type="hidden" name="_id" value="<%= keyword._id %>">
+    <div class="form-group">
+        <label><%= lingua.auto_reply.desc_keyword %></label>
+        <p><b><%= keyword.keyword %></b></p>
+    </div>
+    <div class="form-group">
+        <label><%= lingua.auto_reply.date_created %></label>
+        <p><b><%= date.created %></b></p>
+    </div>
+    <div class="form-group">
+        <label><%= lingua.auto_reply.date_updated %></label>
+        <p><b><%= date.updated %></b></p>
+    </div>
+    <div class="form-group">
+        <label><%= lingua.auto_reply.desc_type %></label>
+        <%
+            if(keyword.type == 'text'){
+                type = lingua.auto_reply.desc_text;
+                label = lingua.auto_reply.desc_answer;
+            }
+            else if(keyword.type == 'image'){
+                type = lingua.auto_reply.desc_image;
+                label = lingua.auto_reply.desc_url_image + " ( .png, .jpg, .jpeg )"
+            }
+            else if(keyword.type == 'document'){
+                type = lingua.auto_reply.desc_document;
+                label = lingua.auto_reply.desc_url_document + " ( .xlsx, .zip, .rar, .png, .jpeg, .jpg, dll )";
+            }
+        %>
+        <p><b><%= type %></b></p>
+    </div>
+    <div class="form-group">
+        <label><%= lingua.auto_reply.desc_status %></label>
+        <select class="form-control" name="status">
+            <option value="true" <%= (keyword.status == true) ? 'selected' : ''; %>><%= lingua.auto_reply.desc_active %></option>
+            <option value="false" <%= (keyword.status == false) ? 'selected' : ''; %>><%= lingua.auto_reply.desc_inactive %></option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label id="label-dyn"><%= label %></label>
+        <textarea class="form-control" id="reply" name="reply"><%= keyword.response_reply %></textarea>
+    </div>
+    <%
+        if(keyword.caption != ''){
+            hidden = '';
+        }
+        else{
+            hidden = 'style="display:none"';
+        }
+    %>
+
+    <div class="form-group" id="caption" <%- hidden %>>
+        <label><%= lingua.auto_reply.desc_caption %></label>
+        <input class="form-control" type="text" id="caption" value="<%= keyword.caption %>" name="caption">
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit"><%= lingua.auto_reply.button_update_data %></button>
+    </div>
+</form>
+<script>
+
+    
+$('#edit-keyword').validate({
+    rules: {
+        reply:{
+            required: true
+        }
+    },
+    messages: {
+        reply:{
+            required: '<%= lingua.auto_reply.validate_reply %>'
+        }
+    },
+    submitHandler: function(form) {
+    $.ajax({
+        type: 'POST',
+        url: '../user/updateKeywordSubmit',
+        data: $('#edit-keyword').serialize(),
+        success: function(e) {
+            table.ajax.reload();
+            loadToast(e.clr, e.message);
+            $('#edit-keyword-modal').modal('hide');
+        },
+        error: function(xhr, status, error) {
+            loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+        }
+    });
+    }
+});
+</script>

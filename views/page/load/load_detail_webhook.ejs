@@ -1,0 +1,31 @@
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tr>
+            <td>ID</td>
+            <td>:</td>
+            <td><b><%= report_webhook._id %></b></td>
+        </tr>
+        <tr>
+            <td><%= lingua.log_webhook_page.desc_detail_time %></td>
+            <td>:</td>
+            <td><b><%= date.created %></b></td>
+        </tr>
+        <tr>
+            <td><%= lingua.log_webhook_page.url_details %> :</td>
+            <td>:</td>
+            <td><b><%= report_webhook.url_webhook %></b></td>
+        </tr>
+        <tr>
+            <td colspan="3"><%= lingua.log_webhook_page.error_webhook_message %> :</td>
+        </tr>
+        <tr>
+            <td colspan="3"><b><%= report_webhook.message_error %></b></td>
+        </tr>
+        <tr>
+            <td colspan="3"><%= lingua.log_webhook_page.parameter_webhook_desc %> :</td>
+        </tr>
+        <tr>
+            <td colspan="3"><%= report_webhook.message_json %></td>
+        </tr>
+    </table>
+</div>

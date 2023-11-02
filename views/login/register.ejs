@@ -1,0 +1,152 @@
+<div class="container mt-5">
+  <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+        <div class="card user-card">
+           <div class="card-body">
+              <h1><i class="fa fa-check-circle"></i> <%= lingua.register_page.title %></h1>
+              <p><%= lingua.register_page.desc %></p>
+              <% if(data_reg.status == 200) {%>
+                <div class="alert alert-info" role="alert">
+                  <%= lingua.register_page.desc_notif %>
+                </div>
+              <% } %>
+              <form id="register" class="form-signin" action="signup" method="post">
+                <div id="message"><%= message %></div>
+                <div class="row">
+                    <div class="col-md">
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_name1 %></label>
+                        <input class="form-control" type="text" name="firstName" value="<%= data_reg.detail.first_name %>">
+                      </div>
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_name2 %></label>
+                        <input class="form-control" type="text" name="lastName" value="<%= data_reg.detail.last_name %>">
+                      </div>
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_username %></label>
+                        <input class="form-control" type="text" name="username">
+                      </div>
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_password %></label>
+                        <input class="form-control" type="password" name="password" id="password">
+                      </div>
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_c_password %></label>
+                        <input class="form-control" type="password" name="con_password">
+                      </div>
+                    </div>
+                    <div class="col-md">
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_email %></label>
+                        <input class="form-control" type="text" name="email" value="<%= data_reg.detail.email %>">
+                      </div>
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_phone %></label>
+                        <input class="form-control" type="text" name="phone" value="<%= data_reg.detail.phone %>">
+                      </div>
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_company %></label>
+                        <input class="form-control" type="text" name="company">
+                      </div>
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_country %></label>
+                        <input class="form-control" type="text" name="country">
+                      </div>
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_zipcode %></label>
+                        <input class="form-control" type="text" name="zip_code">
+                      </div>
+                      <div class="form-group">
+                        <label><%= lingua.register_page.form_address %></label>
+                        <textarea class="form-control" name="address"></textarea>
+                      </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                  <input type="checkbox" id="term" /> <label><%= lingua.register_page.form_tos %> <a href="https://whapi.id/tos.html" target="_blank"><%= lingua.register_page.form_tos_link %></a></label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit"><%= lingua.register_page.form_register %></button>
+              </form>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-body">
+              &copy; <%= new Date().getFullYear() %>, <%= lingua.welcome_page.copyright %>
+          </div>
+      </div>
+     </div>
+      <div class="col-md-2"></div>
+</div>
+</div>
+<script>
+  $('#register').validate({
+    rules: {
+      firstName: {
+        required: true
+      },
+      username: {
+        required: true,
+        minlength: 5
+      },
+      password: {
+        required: true,
+        minlength: 5
+      },
+      con_password: {
+        required: true,
+        minlength: 5,
+        equalTo: '#password'
+      },
+      email:{
+        required: true,
+        email: true
+      },
+      phone: {
+        required: true,
+        number: true
+      },
+      zip_code: {
+        number: true
+      }
+    },
+    messages: {
+      firstName: {
+        required: '<%= lingua.register_page.validate_name1 %>'
+      },
+      username: {
+        required: '<%= lingua.register_page.validate_username_1 %>',
+        minlength: '<%= lingua.register_page.validate_username_2 %>'
+      },
+      password: {
+        required: '<%= lingua.register_page.validate_password_1 %>',
+        minlength: '<%= lingua.register_page.validate_password_2 %>'
+      },
+      con_password: {
+        required: '<%= lingua.register_page.validate_c_password_1 %>',
+        minlength: '<%= lingua.register_page.validate_c_password_2 %>',
+        equalTo: '<%= lingua.register_page.validate_c_password_3 %>'
+      },
+      email:{
+        required: '<%= lingua.register_page.validate_email_1 %>',
+        email: '<%= lingua.register_page.validate_email_2 %>'
+      },
+      phone: {
+        required: '<%= lingua.register_page.validate_phone_1 %>',
+        number: '<%= lingua.register_page.validate_phone_2 %>'
+      },
+      zip_code: {
+        number: '<%= lingua.register_page.validate_phone_2 %>'
+      }
+    },
+    submitHandler: function(form) {
+      if($('input[type="checkbox"]').is(":checked")){
+        form.submit();
+      }
+      else if($('input[type="checkbox"]').is(":not(:checked)")){
+        alert("<%= lingua.register_page.tos_validate %>");
+      }
+      
+    }
+  })
+</script>

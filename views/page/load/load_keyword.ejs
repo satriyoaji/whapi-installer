@@ -1,0 +1,211 @@
+<%
+    if(device.settings.autoreply_status == false){
+%>
+<div class="alert alert-warning" role="alert">
+    <%= lingua.auto_reply.desc_active_feature %> <a href="../user/manageDevice?id=<%= device._id %>"><%= lingua.auto_reply.link_here %></a>.
+</div>
+<% } %>
+<div class="form-group">
+    <button type="button" <%= device.settings.autoreply_status ? '' : 'disabled' %> class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+        <%= lingua.auto_reply.desc_add_data %>
+    </button>
+</div>
+<table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+    <thead>
+        <tr>
+            <th><%= lingua.auto_reply.column_keyword %></th>
+            <th><%= lingua.auto_reply.column_type %></th>
+            <th><%= lingua.auto_reply.column_status %></th>
+            <th><%= lingua.auto_reply.column_answer %></th>
+            <th><%= lingua.auto_reply.column_action %></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><%= lingua.auto_reply.desc_add_keyword %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form id="add-keyword" method="post">
+            <input type="hidden" name="apiKey" value="<%= device.apiKey %>">
+            <div class="form-group">
+                <label><%= lingua.auto_reply.desc_keyword %></label>
+                <input class="form-control" type="text" id="keyword" name="keyword">
+            </div>
+            <div class="form-group">
+                <label><%= lingua.auto_reply.desc_type %></label>
+                <select class="form-control" id="type_keyword" name="type_keyword">
+                    <option value="text"><%= lingua.auto_reply.desc_text %></option>
+                    <option value="image"><%= lingua.auto_reply.desc_image %></option>
+                    <option value="document"><%= lingua.auto_reply.desc_document %></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label><%= lingua.auto_reply.desc_status %></label>
+                <select class="form-control" name="status">
+                    <option value="true"><%= lingua.auto_reply.desc_active %></option>
+                    <option value="false"><%= lingua.auto_reply.desc_inactive %></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label id="label-dyn"><%= lingua.auto_reply.desc_answer %></label>
+                <textarea class="form-control" id="reply" name="reply"></textarea>
+            </div>
+            <div class="form-group" id="caption" style="display:none">
+                <label><%= lingua.auto_reply.desc_caption %></label>
+                <input class="form-control" type="text" id="caption" name="caption">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit"><%= lingua.auto_reply.desc_add_data %></button>
+            </div>
+            </form>
+    </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="edit-keyword-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"><%= lingua.auto_reply.desc_detail_keyword %></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" id="update-keyword"></div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    
+    var table = $('#example').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "order":[],
+        "ajax":{
+            url: '../user/keywordDt?apiKey=<%= device.apiKey %>'
+        },
+        'columns':[
+            { 'data': 'keyword' },
+            { 'data': 'type' },
+            { 'data': 'status' },
+            { 'data': 'response_reply' },
+            { 'data': 'action' }
+        ],
+        "columnDefs":[{
+                "targets":[0, 1, 2, 3],
+                "orderable":false,
+            },
+        ],
+        "aLengthMenu": [[10, 15, 20, 25, 30], [10, 15, 20, 25, 30]],
+        "iDisplayLength": 10,
+    });
+
+    var deleteConfirm
+    var updateConfirm
+
+    $("#type_keyword").change(function(){
+        if ($("#type_keyword").val() == 'text') {
+            $("#caption").hide()
+            $('#label-dyn').html('<%= lingua.auto_reply.desc_answer %>')
+        }
+        else if($("#type_keyword").val() == 'image'){
+            $("#caption").show()
+            $('#label-dyn').html('<%= lingua.auto_reply.desc_url_image %> ( .png, .jpg, .jpeg )')
+        }
+        else if($("#type_keyword").val() == 'document'){
+            $("#caption").hide()
+            $('#label-dyn').html('<%= lingua.auto_reply.desc_url_document %> ( .xlsx, .zip, .rar, .png, .jpeg, .jpg, dll )')
+        }
+    })
+
+    $(document).ready( function () {
+
+        $('#add-keyword').validate({
+            rules: {
+                keyword: {
+                    required: true
+                },
+                type_keyword: {
+                    required: true
+                },
+                reply:{
+                    required: true
+                }
+            },
+            messages: {
+                keyword: {
+                    required: '<%= lingua.auto_reply.validate_keyword %>'
+                },
+                type_keyword: {
+                    required: '<%= lingua.auto_reply.validate_type %>'
+                },
+                reply:{
+                    required: '<%= lingua.auto_reply.validate_reply %>'
+                }
+            },
+            submitHandler: function(form) {
+            $.ajax({
+                type: 'POST',
+                url: '../user/addKeywordSubmit',
+                data: $('#add-keyword').serialize(),
+                success: function(e) {
+                    $('#keyword').val('');
+                    $('#reply').val('');
+                    $('#caption').val('');
+                    table.ajax.reload()
+                    loadToast(e.clr, e.message);
+                },
+                error: function(xhr, status, error) {
+                    loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+                }
+            });
+            }
+        });
+
+        updateConfirm = function(id){
+            $.ajax({
+                url: '../user/loadUpdateKeyword',
+                type: 'post',
+                data: "_id=" + id,
+                success: function(e) {
+                    $('#edit-keyword-modal').modal('show');
+                    $("#update-keyword").html(e);
+                },
+                error: function(xhr, status, error) {
+                    loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+                }
+            });
+        }
+
+        deleteConfirm = function(id){
+            var r = confirm("<%= lingua.auto_reply.confirm_delete %>");
+            if (r == true) {
+                $.ajax({
+                    url: '../user/deleteKeyword',
+                    type: 'post',
+                    data: "_id=" + id,
+                    success: function(e) {
+                        if (e.code == 200) {
+                            table.ajax.reload();
+                            loadToast(e.clr, e.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+                    }
+                });
+            }
+        }
+    })
+</script>

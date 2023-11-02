@@ -1,0 +1,57 @@
+<div class="container h-100">
+		<div class="d-flex justify-content-center h-100">
+			<div class="user_card">
+				<div class="d-flex justify-content-center form_container">
+					<div class="brand_logo_container">
+						<img src="/img/logo-only.png" class="brand_logo" alt="Logo">
+					</div>
+				</div>
+				<h4 class="mb-3"><i class="fa fa-lock"></i> <%= lingua.login_page.title %></h4>
+				<% if(message.length) {%>
+					<div class="alert alert-<%= type %>" role="alert">
+					  <%= message %>
+					</div>
+				<% } %>
+				<form id="login" action="<%= global.routes_change?.login || '/login' %>" method="post">
+					<div class="form-group">
+						<input type="text" name="username" class="form-control input_user" autocomplete="off" placeholder="Username">
+					</div>
+					<div class="form-group">
+						<input type="password" name="password" class="form-control input_pass" autocomplete="off" placeholder="Password">
+					</div>
+					<div class="mt-2 mb-2">
+						<a href="forgot-password"><%= lingua.login_page.desc_forgot %></a>
+					</div>
+					<button type="submit" class="btn btn-success mb-2 mt-2"><%= lingua.login_page.button_login %></button>
+				</form>
+				<div class="mt-2">
+					<div class="text-center">
+						<b>WHAPI ( Whatsapp API Gateway )</b>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		$('#login').validate({
+		  rules: {
+			username: {
+			  required: true,
+			},
+			password: {
+			  required: true,
+			}
+		  },
+		  messages: {
+			username: {
+			  required: '<%= lingua.login_page.validate_username %>',
+			},
+			password: {
+			  required: '<%= lingua.login_page.validate_password %>',
+			}
+		  },
+		  submitHandler: function(form) {
+			form.submit();
+		  }
+		})
+	  </script>

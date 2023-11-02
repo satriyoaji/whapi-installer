@@ -1,0 +1,16 @@
+<ul class="list-group">
+    <li class="list-group-item active"><h5 style="margin:0" class="card-title"><i class="fa fa-lightbulb"></i> Hint</h5></li>
+    <%
+        for(var i=0; i < 3; i++){
+        if(lang == 'id_ID'){
+            a = data[i].announcement
+        }
+        else{
+            a = data[i].announcement_en
+        }
+    %>
+    <li class="list-group-item"><%- a %></li>
+    <%
+        }
+    %>
+</ul>

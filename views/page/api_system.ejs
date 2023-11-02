@@ -1,0 +1,172 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="card user-card mb-3">
+            <div class="card-body">
+                <h5><%= lingua.api_system.desc_title %></h5>
+                <div class="alert alert-info" role="alert">
+                    <b><span id="new-apikey"><%- apikey %></span></b>
+                </div>
+                <form id="change-apikey" class="form-group">
+                    <button type="submit" class="btn btn-info"><%= lingua.api_system.btn_system %></button>
+                </form>
+            </div> 
+        </div>
+        <div class="card user-card">
+            <div class="card-body">
+                <h5><%= lingua.api_system.desc_title_reboot %></h5>
+                <div class="alert alert-secondary" role="alert">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input active_reboot" data-feature="autoreply_status<%= i %>" id="active_feature" <% if(settings_app_global?.auto_reboot_device) { %> 
+                            checked
+                        <% } %>>
+                        <label class="custom-control-label" for="active_feature"><b><%= lingua.api_system.desc_active %></b></label>
+                    </div>
+                </div>
+                <form id="update-time-reboot" class="form-group">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input class="form-control" value="<%= settings_app_global.auto_reboot_device_time?.interval || 1 %>" type="number" id="interval" name="interval">
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control" name="custom">
+                                <option value="days" <% if(settings_app_global.auto_reboot_device_time?.custom == 'days') { %> 
+                                    selected
+                                <% } %> ><%= lingua.api_system.desc_combobox_days %></option>
+                                <option value="hours" <% if(settings_app_global.auto_reboot_device_time?.custom == 'hours' || settings_app_global.auto_reboot_device_time?.interval == undefined) { %> 
+                                    selected
+                                <% } %> ><%= lingua.api_system.desc_combobox_minutes %></option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><%= lingua.api_system.desc_combobox_btn %></button>
+                </form>
+                <hr/>
+                <div class="row">
+                <%
+                    if(device.length > 0){
+                        for(var i=0; i < device.length; i++){
+                %>
+                <div class="col-md-6">
+                    <div class="alert alert-secondary" role="alert">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" <% if(!settings_app_global?.auto_reboot_device) { %> 
+                                disabled
+                            <% } %> class="custom-control-input list_device" data-apikey="<%= device[i].apiKey %>" id="active_<%= i %>"
+                            <% if(device[i]?.auto_reboot_device && settings_app_global?.auto_reboot_device) { %> 
+                                checked
+                            <% } %>>
+                            <label class="custom-control-label" for="active_<%= i %>"><b><%= device[i].nameDevice.substring(0, 17) %></b></label>
+                        </div>
+                    </div>
+                </div>
+                <%
+                    }
+                }
+                %>
+                </div>
+    </div> 
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card user-card">
+            <div class="card-body">
+                <p><%= lingua.api_system.desc_1 %></p>
+                <p>
+                    <ol>
+                        <li><%= lingua.api_system.desc_2 %></li>
+                        <li><%= lingua.api_system.desc_3 %></li>
+                        <li><%= lingua.api_system.desc_7 %></li>
+                        <li><%= lingua.api_system.desc_4 %></li>
+                        <li><%= lingua.api_system.desc_5 %></li>
+                        <li><%= lingua.api_system.desc_6 %></li>
+                    </ol>
+                </p>
+                <a class="btn btn-info btn-block" href="https://documenter.getpostman.com/view/13310053/TVYKbwbT#4992740c-6049-4a7a-a7c8-f2c8645f4df6" target="_blank"><%= lingua.api_system.btn_docs_api %></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#change-apikey').validate({
+        submitHandler: function(form) {
+            $.ajax({
+               type: 'POST',
+               url: '../user/newApiKeySystem',
+               data: $('#change-apikey').serialize(),
+               success: function(e) {
+                    $("#new-apikey").html(e.results.apiKey)
+                    loadToast('success', "<%= lingua.api_system.desc_success_apikey %>")
+               },
+               error: function(xhr, status, error) {
+                loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+               }
+            });
+        }
+    })
+
+    $('#update-time-reboot').validate({
+        submitHandler: function(form) {
+            $.ajax({
+                type: 'POST',
+                url: '../user/updateTimeReboot',
+                data: $('#update-time-reboot').serialize(),
+                success: function(e) {
+                    if(e.code == 200) {
+                        loadToast('success', "<%= lingua.api_system.desc_changetime_rebootdevice %>")
+                    } else {
+                        loadToast('danger', e.results.message)
+                    }
+                },
+                error: function(xhr, status, error) {
+                    loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+                }
+            });
+        }
+    })
+
+    $(".active_reboot").on('change', function() {
+        const isChecked = $(this).is(':checked');
+        $.ajax({
+            type: 'POST',
+            url: '../user/activeGlobalRebootDevice',
+            data: {
+                status_global: isChecked
+            },
+            success: function(e) {
+                $(".list_device").prop("disabled", !isChecked)
+                if(!isChecked) $(".list_device").prop("checked", false)
+                if(e.results && e.results.listActivated.length > 0 && isChecked) {
+                    e.results.listActivated.forEach(function(item) {
+                        $("[data-apikey=" + item + "]").prop("checked", true);
+                    });
+                }
+                if(e.code == 200) {
+                    isChecked ? loadToast('success', "<%= lingua.api_system.desc_on_rebootdevice %>") : loadToast('info', "<%= lingua.api_system.desc_off_rebootdevice %>")
+                } else {
+                    loadToast('danger', e.results.message)
+                }
+            },
+            error: function(xhr, status, error) {
+                loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+            }
+        });
+    });
+
+    $(".list_device").on('change', function() {
+        $.ajax({
+            type: 'POST',
+            url: '../user/activeRebootDevice',
+            data: {
+                apiKey: $(this).attr('data-apikey'),
+                status: $(this).is(':checked')
+            },
+            success: function(e) {
+                loadToast(e.clr, e.results.message)
+            },
+            error: function(xhr, status, error) {
+                loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+            }
+        });
+    });
+</script>

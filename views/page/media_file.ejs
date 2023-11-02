@@ -1,0 +1,105 @@
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="alert alert-secondary" role="alert">
+            <%- lingua.file_media_page.desc_upload %>
+         </div>
+       <div class="card user-card">
+            <div class="card-body">
+                <input type="file" id="file_whapi" name="file_whapi[]" multiple/>
+                <input type="button" id="but_upload" class="btn btn-primary" value="<%= lingua.file_media_page.button_upload %>"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card user-card">
+             <div class="card-body">
+                <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th><%= lingua.file_media_page.column_name %></th>
+                            <th><%= lingua.file_media_page.column_extension %></th>
+                            <th><%= lingua.file_media_page.column_size %></th>
+                            <th><%= lingua.file_media_page.column_action %></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+             </div>
+         </div>
+     </div>
+</div>
+
+<script>
+
+var appTable = {};
+var deleteConfirm
+
+$(document).ready( function () {
+    appTable.table = $('#example').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "order":[],
+        "ajax":{
+            url: '../user/mediaDt'
+        },
+        'columns':[
+            { 'data': 'name' },
+            { 'data': 'mime_type' },
+            { 'data': 'size' },
+            { 'data': 'action' }
+        ],
+        "columnDefs":[{
+            "targets":[0, 1, 2, 3],
+            "orderable": false,
+        },
+        ],
+        "aLengthMenu": [[10, 15, 20, 25, 30], [10, 15, 20, 25, 30]],
+        "iDisplayLength": 10,
+    });
+
+    deleteConfirm = function(id){
+        var r = confirm("<%= lingua.file_media_page.confirm_delete %>");
+        if (r == true) {
+            $.ajax({
+                url: '../user/deleteFileMedia',
+                type: 'post',
+                data: "_id=" + id,
+                success: function(e) {
+                    appTable.table.ajax.reload()
+                    loadToast(e.clr, e.message);
+                },
+                error: function(xhr, status, error) {
+                    loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+                }
+            });
+        }
+    }
+
+    $("#but_upload").click(function(){
+        var fd = new FormData();
+        var files = $('#file_whapi')[0].files;
+        // Check file selected or not
+        if(files.length > 0 ){
+            var string = '';
+            for (let a = 0; a < files.length; a++) {
+                string += files[a].name + "<br/>";
+                fd.append('file_whapi', files[a]);
+            }
+            $.ajax({
+                url: 'uploadFileSubmit',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function(response){
+                    $('#file_whapi').val('')
+                    appTable.table.ajax.reload()
+                    loadToast('success', "<%= lingua.file_media_page.desc_success_upload %> : <br/><br/>" + string);
+                },
+            });
+        } else{
+            loadToast('danger', "<%= lingua.file_media_page.desc_required_upload %>");
+        }
+    });  
+})
+</script>

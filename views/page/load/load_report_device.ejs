@@ -1,0 +1,72 @@
+<div class="form-group">
+    <button type="button" onclick="clearConfirm('<%= device._id %>')" class="btn btn-info">
+        <%= lingua.log_api_page.button_clear_log %>
+    </button>
+</div>
+<table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+    <thead>
+        <tr>
+            <th><%= lingua.log_api_page.column_time %></th>
+            <th><%= lingua.log_api_page.column_message %></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<div class="modal fade" id="load-report-api" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"><%= lingua.log_api_page.desc_detail_report %></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" id="data-report"></div>
+        </div>
+    </div>
+    </div>
+<script>
+    
+    var table = $('#example').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "order":[],
+        "ajax":{
+            url: '../user/reportApiDeviceDt?apiKey=<%= device.apiKey %>&status=<%= params.status %>'
+        },
+        'columns':[
+            { 'data': 'date' },
+            { 'data': 'message' }
+        ],
+        "columnDefs":[{
+            "targets":[0, 1],
+            "orderable": false,
+        },
+        ],
+        "aLengthMenu": [[10, 15, 20, 25, 30], [10, 15, 20, 25, 30]],
+        "iDisplayLength": 10,
+    });
+
+    $(document).ready( function () {
+
+        clearConfirm = function(id){
+            var r = confirm("<%= lingua.log_api_page.desc_confirm_delete %>");
+            if (r == true) {
+                $.ajax({
+                    url: '../user/clearReportDeviceApi',
+                    type: 'post',
+                    data: "_id=" + id,
+                    success: function(e) {
+                        table.ajax.reload();
+                        loadToast(e.clr, e.message);
+                    },
+                    error: function(xhr, status, error) {
+                        loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+                    }
+                });
+            }
+        }
+
+    })
+</script>

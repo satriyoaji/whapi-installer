@@ -1,0 +1,238 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card user-card mb-3">
+                    <div class="card-body">
+                        <label><%= lingua.welcome_page.label_languange %> :</label>
+                        <select class="form-control" id="lang">
+                            <option value="en_US" <%= lang == 'en_US' ? 'selected' : '' %>>English ( EN )</option>
+                            <option value="id_ID" <%= lang == 'id_ID' ? 'selected' : '' %>>Indonesia ( ID )</option>
+                            <option value="pt_BR" <%= lang == 'pt_BR' ? 'selected' : '' %>>Brazil ( BR )</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card user-card mb-3">
+                    <div class="card-body"> 
+                        <h5><i class="fad fa-check-circle"></i> <%= lingua.settings_page.desc_si %></h5>
+                        <table class="table table-bordered table-striped">
+                            <tr class="bg-secondary text-white">
+                                <td><b>Hostname</b></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <%= si.hostname %>
+                                </td>
+                            </tr>
+                            <tr class="bg-secondary text-white">
+                                <td><b>Platform</b></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <%= si.platform %>
+                                </td>
+                            </tr>
+                            <tr class="bg-secondary text-white">
+                                <td><b>Distro</b></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <%= si.distro %>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="card user-card mb-3">
+                    <div class="card-body">
+                        <h5><i class="fad fa-file-chart-line"></i> <%= lingua.settings_page.desc_title_log %></h5>
+                        <div class="alert alert-secondary" role="alert">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input featured_whapi_global" <%= (settings.set_log_api) ? 'checked' : ''; %> data-feature="set_log_api" id="set_log_api">
+                                <label class="custom-control-label" for="set_log_api"><b><%= lingua.settings_page.desc_title_log_api %></b></label>
+                            </div>
+                            <%= lingua.settings_page.desc_log_api %>
+                        </div>
+                        <div class="alert alert-secondary" role="alert">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input featured_whapi_global" <%= (settings.set_log_device) ? 'checked' : ''; %> data-feature="set_log_device" id="set_log_device">
+                                <label class="custom-control-label" for="set_log_device"><b><%= lingua.settings_page.desc_title_device %></b></label>
+                            </div>
+                            <%= lingua.settings_page.desc_device %>
+                        </div>
+                        <div class="alert alert-secondary" role="alert">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input featured_whapi_global" <%= (settings.set_log_err_webhook) ? 'checked' : ''; %> data-feature="set_log_err_webhook" id="set_log_err_webhook">
+                                <label class="custom-control-label" for="set_log_err_webhook"><b><%= lingua.settings_page.title_webhook_err %></b></label>
+                            </div>
+                            <%- lingua.settings_page.desc_webhook_err %>
+                        </div>
+                        <div class="alert alert-secondary" role="alert">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input featured_whapi_global" <%= (settings.set_store_chat || settings.set_store_chat  == undefined) ? 'checked' : ''; %> data-feature="set_store_chat" id="set_store_chat">
+                                <label class="custom-control-label" for="set_store_chat"><b><%= lingua.settings_page.title_storechat %></b></label>
+                            </div>
+                            <%- lingua.settings_page.desc_storechat %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="card user-card mb-3">
+                    <div class="card-body">
+                        <h5><i class="fad fa-globe-europe"></i> <%= lingua.settings_page.desc_title_ngrok %></h5>
+                        <form id="save-ngrok">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <%
+                                        if(active_ngrok){
+                                            ngrok_value = 'tidak_aktif'
+                                            ngrok_text = lingua.settings_page.desc_off
+                                            ngrok_class = 'btn btn-danger btn-block'
+                                            ngrok_disabled = 'disabled'
+                                        }
+                                        else{
+                                            ngrok_value = 'aktif'
+                                            ngrok_text = lingua.settings_page.desc_on
+                                            ngrok_class = 'btn btn-success btn-block'
+                                            ngrok_disabled = ''
+                                        }
+                                    %>
+                                    <div class="form-group">
+                                        <input type="hidden" name="whapi_active" id="whapi_active" value="<%= ngrok_value %>"/>
+                                        <input type="text" name="auth_token" id="auth_token" <%= ngrok_disabled %> class="form-control" autocomplete="off" value="<%= settings.url_ngrok %>" placeholder="Auth Token Ngrok">
+                                    </div>
+                                </div>
+                                <div class="col-md-3"><input type="submit" class="<%= ngrok_class %>" id="active_ngrok" value="<%= ngrok_text %>"/></div>
+                            </div>
+                        </form>
+                        <label><%= lingua.settings_page.form_url %></label>
+                        <div class="alert alert-info" role="alert">
+                            <b><span id="url-ngrok"><%= (url_ngrok) ? url_ngrok : '-' %></span></b>
+                        </div>
+                        <%= lingua.settings_page.desc_ngrok %>
+                    </div>
+                </div>
+                <div class="card user-card mb-3">
+                    <div class="card-body">
+                        <h5><i class="fad fa-redo-alt"></i> <%= lingua.settings_page.desc_refresh %></h5>
+                        <p><%= lingua.settings_page.desc_refresh_2 %></p>
+                        <a href="../refreshLicense" class="btn btn-info btn-block mb-3"><%= lingua.settings_page.button_refresh %></a>
+                    </div>
+                </div>
+                <div class="card user-card mb-3">
+                    <div class="card-body">
+                        <h5><i class="fad fa-check-circle"></i> <%= lingua.settings_page.desc_uninstall %></h5>
+                        <p><%= lingua.settings_page.desc_uninstall_2 %></p>
+                        <a href="#" class="btn btn-danger btn-block mb-3" onclick="uninstallLicense(event)"><%= lingua.settings_page.button_uninstall %></a>
+                    </div>
+                </div>
+                <div class="card user-card mb-3">
+                    <div class="card-body">
+                        <h5><i class="fad fa-sync"></i> <%= lingua.settings_page.title_restartapp %></h5>
+                        <p><%= lingua.settings_page.title_restartapp_desc %></p>
+                        <a href="/user/restartApp" class="btn btn-primary btn-block mb-3"><%= lingua.settings_page.title_restartapp_button %></a>
+                    </div>
+                </div>
+                <div class="card user-card mb-3">
+                    <div class="card-body">
+                        <h5><i class="fad fa-power-off"></i> <%= lingua.settings_page.title_shutdownapp %></h5>
+                        <p><%= lingua.settings_page.title_shutdownapp_desc %></p>
+                        <a href="/user/shutdownApp" class="btn btn-secondary btn-block mb-3"><%= lingua.settings_page.title_shutdownapp_button %></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function uninstallLicense(e){
+        var result = confirm('<%= lingua.settings_page.confirm_uninstall %>');
+        if (result) {
+            location.href = "../uninstall-license";
+        }
+    }
+
+    $('#save-ngrok').validate({
+        rules: {
+            auth_token: {
+                required: true,
+                minlength: 20
+            }
+        },
+        messages: {
+            auth_token: {
+                required: "<%= lingua.settings_page.validate_auth_ngrok %>",
+                minlength: '<%= lingua.settings_page.validate_min_length %>'
+            }
+        },
+        submitHandler: function(form) {
+            if($('#whapi_active').val() == 'aktif'){
+                url_ngrok = 'saveAuthTokenNgrokSubmit'
+            }
+            else{
+                url_ngrok = 'killNgrokSubmit'
+            }
+            $.ajax({
+               type: 'POST',
+               url: '../user/' + url_ngrok,
+               data: $('#save-ngrok').serialize(),
+               beforeSend: function() {
+                    $('#active_ngrok').prop('disabled', true)
+               },
+               success: function(e) {
+                    if (e.status) {
+                        if ($('#whapi_active').val() == 'aktif') {
+                            $('#whapi_active').val('tidak_aktif')
+                            $('#auth_token').prop('disabled', true)
+                            $('#active_ngrok').prop('disabled', false).prop('class', 'btn btn-danger btn-block').val('<%= lingua.settings_page.desc_off %>')
+                            $('#url-ngrok').html(e.results.url)
+                        }
+                        else{
+                            $('#whapi_active').val('aktif')
+                            $('#url-ngrok').html("-")
+                            $('#auth_token').prop('disabled', false)
+                            $('#active_ngrok').prop('disabled', false).prop('class', 'btn btn-success btn-block').val('<%= lingua.settings_page.desc_on %>')
+                        }
+                    }
+                    loadToast(e.clr, e.results.message)
+               },
+               error: function(xhr, status, error) {
+                loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+               }
+            });
+        }
+    })
+
+    $(".featured_whapi_global").on('change', function() {
+        $.ajax({
+            type: 'POST',
+            url: '../user/settingAppSubmit',
+            data: {
+                status: $(this).is(':checked'),
+                feature: $(this).attr('data-feature')
+            },
+            success: function(e) {
+                loadToast('info', e.results.message)
+            },
+            error: function(xhr, status, error) {
+                loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+            }
+        });
+    });
+
+    $("#lang").change(function(){
+        $.ajax({
+            url: '../change-language',
+            type: 'post',
+            data: "lang=" + $("#lang").val(),
+            success: function(e) {
+                window.location.href = e.url
+            },
+            error: function(xhr, status, error) {
+                loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+            }
+        });
+    })
+</script>

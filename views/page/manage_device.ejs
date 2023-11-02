@@ -1,0 +1,125 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card user-card mb-3">
+            <div class="card-body">
+                <div id="status"></div>
+                <h5><i class="fad fa-plus-circle"></i> <%= lingua.device_page.desc_add_device %></h5>
+                <form id="add-device" method="post">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label><%= lingua.device_page.desc_name_device %></label>
+                        <input class="form-control" type="text" id="name" name="name">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label><%= lingua.device_page.desc_api_key %></label>
+                        <input class="form-control" type="text" id="apiKey" name="apiKey">
+                        <p class="text-muted"><%= lingua.device_page.desc_api_key2 %></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <button class="btn btn-primary" type="submit"><%= lingua.device_page.button_device %></button>
+                    <a href="https://whapi.id/payment_page.html?addon=true" class="btn btn-info"><%= lingua.device_page.button_limit %></a>
+                  </div>
+                  <%= lingua.device_page.desc_limit %> : <b><%= count_device %></b>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+      <div class="card user-card">
+        <div class="card-body">
+          <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th><%= lingua.device_page.column_device %></th>
+                    <th><%= lingua.device_page.column_state %></th>
+                    <th><%= lingua.device_page.column_time %></th>
+                    <th><%= lingua.device_page.column_action %></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script>
+  
+    $(document).ready( function () {
+
+      var table = $('#example').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "order":[],
+        "ajax":{
+            url: '../user/listDeviceDt'
+        },
+        'columns':[
+            { 'data': 'name_device' },
+            { 'data': 'status_label' },
+            { 'data': 'creation' },
+            { 'data': 'action' }
+        ],
+        "columnDefs":[{
+                "targets":[0, 1, 2],
+                "orderable":false,
+            },
+        ],
+        "aLengthMenu": [[10, 15, 20, 25, 30], [10, 15, 20, 25, 30]],
+        "iDisplayLength": 10,
+    });
+
+      deleteConfirm = function(id){
+          var r = confirm("<%= lingua.device_page.confirm_delete %>");
+          if (r == true) {
+              $.ajax({
+                  url: '../user/deleteDevice',
+                  type: 'post',
+                  data: "_id=" + id,
+                  success: function(e) {
+                      table.ajax.reload();
+                      loadToast('info', e.message)
+                  },
+                  error: function(xhr, status, error) {
+                      loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+                  }
+              });
+          }
+      }
+
+      $('#add-device').validate({
+        rules: {
+          name: {
+            required: true
+          }
+        },
+        messages: {
+          name: {
+            required: '<%= lingua.device_page.validate_name %>'
+          }
+        },
+        submitHandler: function(form) {
+          $.ajax({
+              type: 'POST',
+              url: '../user/addDevice',
+              data: $('#add-device').serialize(),
+              success: function(e) {
+                $('#name').val('')
+                $('#apiKey').val('')
+                table.ajax.reload()
+                loadToast(e.clr, e.message)
+              },
+              error: function(xhr, status, error) {
+                loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+              }
+          });
+        }
+      });
+    })
+
+  </script>

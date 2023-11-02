@@ -1,0 +1,8 @@
+<p><%= ram.active %> / <%= ram.total %> ( <%= ram.percent %> % )</p>
+<%
+    style = 'style=width:'+ram.percent+'%';
+%>
+<div class="progress mb-3">
+    <div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" role="progressbar" <%= style %> aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<a href="../user/process-list" class="btn btn-outline-danger btn-block btn-sm"><%= lingua.dashboard_page.button_ram %></a>

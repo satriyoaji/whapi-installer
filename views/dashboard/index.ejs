@@ -1,0 +1,76 @@
+<div class="container mt-5 mb-5">
+   <div class="row mt-3">
+      <div class="col-md-12" id="">
+         <nav class="navbar navbar-expand-lg navbar navbar-light bg-light mb-3">
+            <a class="navbar-brand" href="#">WHAPI</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="../user/dashboard"><i class="fas fa-tachometer-alt fa-fw"></i> Homepage <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-mobile-alt fa-fw"></i> <%= lingua.homepage.desc_device %>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="../user/device"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_device1 %></a>
+                    <a class="dropdown-item" href="../user/report-device"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_device2 %></a>
+                    <a class="dropdown-item" href="../user/report-api"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_device3 %></a>
+                    <a class="dropdown-item" href="../user/report-webhook"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_device4 %></a>
+                  </div>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-cubes"></i> <%= lingua.homepage.desc_utility %>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="../user/auto-reply"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_utility1 %></a>
+                    <a class="dropdown-item" href="../user/file-media"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_utility2 %></a>
+                    <a class="dropdown-item" href="../user/add-on"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_utility3 %></a>
+                    <a class="dropdown-item" href="../user/process-list"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_utility4 %></a>
+                    <a class="dropdown-item" href="../user/database-manager"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_utility5 %></a>
+                    <a class="dropdown-item" href="../user/api-system"><i class="fas fa-angle-right"></i> <%= lingua.api_system.menu_system %></a>
+                  </div>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-book fa-fw"></i> API
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" target="_blank" href="https://documenter.getpostman.com/view/13310053/TVYKbwbT"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_api %></a>
+                  </div>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-info-circle fa-fw"></i> <%= lingua.homepage.desc_about %>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="../user/settings"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_about1 %></a>
+                    <a class="dropdown-item" href="../user/security"><i class="fas fa-angle-right"></i> Security</a>
+                    <a class="dropdown-item" href="../user/changelog"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_about2 %></a>
+                    <a class="dropdown-item" href="../user/account"><i class="fas fa-angle-right"></i> <%= lingua.homepage.desc_about3 %></a>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../user/logout"><i class="fas fa-lock"></i> <%= lingua.homepage.desc_logout %></a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+         <%- include(content)  %>
+      </div>
+      
+   </div>
+   <div class="row mt-3">
+      <div class="col">
+          <div class="card">
+              <div class="card-body">
+                  &copy; <%= new Date().getFullYear() %>, Powered By WHAPI
+              </div>
+          </div>
+      </div>
+    </div>
+</div>

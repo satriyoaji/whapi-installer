@@ -1,0 +1,8 @@
+<p><%= count_device.active %> / <%= count_device.total %> ( <a href="https://whapi.id/payment_page.html?addon=true"><%= lingua.dashboard_page.link_device %></a> )</p>
+<%
+    style = 'style=width:'+count_device.percent+'%';
+%>
+<div class="progress mb-3">
+    <div class="progress-bar progress-bar-striped bg-primary progress-bar-animated" role="progressbar" <%= style %> aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<a href="../user/device" class="btn btn-outline-primary btn-block btn-sm"><%= lingua.dashboard_page.button_device %></a>

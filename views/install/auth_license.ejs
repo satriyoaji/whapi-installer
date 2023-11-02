@@ -1,0 +1,59 @@
+<div class="container mt-5">
+    <div class="row">
+       <div class="col-md-12">
+          <div class="card user-card">
+             <div class="card-body">
+                <% if(message.length) {%>
+					<div class="alert alert-<%= type %>" role="alert">
+					  <%= message %>
+					</div>
+				<% } %>
+                <h1><%= lingua.auth_page.title %></h1>
+                <p><%= lingua.auth_page.desc %></p>
+                <table class="table table-bordered">
+                    <tr>
+                        <th width="15%"><%= lingua.auth_page.column_table_1 %></th>
+                        <th width="55%"><%= lingua.auth_page.column_table_2 %></th>
+                        <th width="30%"><%= lingua.auth_page.column_table_3 %></th>
+                    </tr>
+                    <tr>
+                        <td><%= lingua.auth_page.desc_table_1 %></td>
+                        <td><%= lingua.auth_page.desc_table_1_1 %></td>
+                        <td><%- (app.isServerMessage ? app.isServerMessage : '<i style="color:red" class="fa fa-times-circle"></i> Not ready') %></td>
+                    </tr>
+                    <tr>
+                        <td><%= lingua.auth_page.desc_table_2_1 %></td>
+                        <td><%= lingua.auth_page.desc_table_2_2 %> <a href="install"><%= lingua.auth_page.desc_table_2_2_link %></a>.</td>
+                        <td><%- (app.isLicenseMessage ? app.isLicenseMessage : '<i style="color:red" class="fa fa-times-circle"></i> Not ready') %></td>
+                    </tr>
+                    <tr>
+                        <td><%= lingua.auth_page.desc_table_3_1 %></td>
+                        <td><%= lingua.auth_page.desc_table_3_2 %> <a href="https://whapi.id/payment_page.html?perpanjang=<%- data_license %>"><%= lingua.auth_page.desc_table_3_2_link %></a></td>
+                        <td>
+                            <%
+                                if(data){
+                                    expired_date = '<i style="color:blue" class="fa fa-info-circle"></i> Expired : ' + data
+                                }
+                                else{
+                                    expired_date = '<i style="color:red" class="fa fa-times-circle"></i> ' + lingua.auth_page.desc_license_not_install
+                                }
+                            %>
+                            <%- expired_date %>
+                        </td>
+                    </tr>
+                </table>
+                <p><%= lingua.auth_page.desc_problem %> <a href="refreshLicense" class="btn btn-info"><%= lingua.auth_page.desc_problem_link %></a></p>
+            </div>
+          </div>
+       </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    &copy; <%= new Date().getFullYear() %>, Powered By WHAPI
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>

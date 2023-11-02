@@ -1,0 +1,17 @@
+<p><%= license.license %></b></p>
+<%
+    if(dateExp > 30){
+        results = 100;
+    }
+    else if(dateExp < 0){
+        results = 0;
+    }
+    else{
+        results = ( dateExp / 30 ) * 100
+    }
+    style = 'style=width:'+results+'%';
+%>
+<div class="progress mb-3">
+    <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" <%= style %> aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><%= dateExp %> <%= lingua.dashboard_page.desc_exp %></div>
+</div>
+<a target="_blank" href="https://whapi.id/payment_page.html?perpanjang=<%= license.license %>" class="btn btn-outline-success btn-block btn-sm"><%= lingua.dashboard_page.desc_exp2 %> <%= realDate %></a>

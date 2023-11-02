@@ -1,0 +1,83 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card user-card mb-3">
+                    <div class="card-body">
+                        <div class="alert alert-secondary" role="alert">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input featured_whapi_global" <%= (settings.set_homepage_custom) ? 'checked' : ''; %> data-feature="set_homepage_custom" id="set_homepage_custom">
+                                <label class="custom-control-label" for="set_homepage_custom"><b><%= lingua.security_page.title_customhomepage %></b></label>
+                            </div>
+                            <%- lingua.security_page.desc_customhomepage %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card user-card mb-3">
+                    <div class="card-body">
+                        <h5><i class="fad fa-lock"></i> <%= lingua.security_page.title_routeslogin %></h5>
+                        <form id="save-path">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="form-group">
+                                        <input type="text" name="routes_path" value="<%= settings?.routes?.login %>" id="routes_path" class="form-control" autocomplete="off" placeholder="/login">
+                                    </div>
+                                </div>
+                                <div class="col-md-3"><input type="submit" class="btn btn-success btn-block" id="active_ngrok" value="<%= lingua.security_page.button_routeslogin %>"/></div>
+                            </div>
+                        </form>
+                        <%= lingua.security_page.desc_routeslogin %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+$(".featured_whapi_global").on('change', function() {
+    $.ajax({
+        type: 'POST',
+        url: '../user/settingAppSubmit',
+        data: {
+            status: $(this).is(':checked'),
+            feature: $(this).attr('data-feature')
+        },
+        success: function(e) {
+            loadToast('info', e.results.message)
+        },
+        error: function(xhr, status, error) {
+            loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+        }
+    });
+});
+
+$('#save-path').validate({
+        rules: {
+            routes_path: {
+                required: true
+            }
+        },
+        messages: {
+            routes_path: {
+                required: "<%= lingua.security_page.validate_routeslogin %>"
+            }
+        },
+        submitHandler: function(form) {
+            $.ajax({
+               type: 'POST',
+               url: '../user/saveRoutesLoginSubmit',
+               data: $('#save-path').serialize(),
+               success: function(e) {
+                    loadToast(e.clr, e.results.message)
+               },
+               error: function(xhr, status, error) {
+                loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+               }
+            });
+        }
+    })
+
+</script>

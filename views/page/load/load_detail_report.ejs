@@ -1,0 +1,151 @@
+<%
+    if (report.status == 1) {
+        status_msg = '<span class="badge badge-warning"><i class="far fa-clock"></i> ' + lingua.log_device_backend.desc_pending + ' </span>'
+    }
+    else if (report.status == 2){
+        status_msg = '<span class="badge badge-info"><i class="fas fa-check"></i> ' + lingua.log_device_backend.desc_delivered + ' </span>'
+    }
+    else if (report.status == 3){
+        status_msg = '<span class="badge badge-primary"><i class="fas fa-check-double"></i> ' + lingua.log_device_backend.desc_received + ' </span>'
+    }
+    else if (report.status == 4){
+        status_msg = '<span class="badge badge-success"><i class="fas fa-check-circle"></i> <i class="fas fa-check-double"></i> ' + lingua.log_device_backend.desc_read + ' </span>'
+    }
+    else{
+        status_msg = '<span class="badge badge-success"><i class="fas fa-check-circle"></i> <i class="fas fa-check-double"></i> ' + lingua.log_device_backend.desc_read + ' </span>'
+    }
+%>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tr>
+            <td>ID</td>
+            <td>:</td>
+            <td><b><%= report.id_message %></b></td>
+        </tr>
+        <tr>
+            <td><%= lingua.log_api_page.desc_detail_time %></td>
+            <td>:</td>
+            <td><b><%= moment(report.createdAt).format('DD MMMM YYYY HH:mm:ss') %></b></td>
+        </tr>
+        <tr>
+            <td><%= lingua.log_api_page.desc_function_api %></td>
+            <td>:</td>
+            <td><b><%= report.method %></b></td>
+        </tr>
+        <tr>
+            <td><%= lingua.log_api_page.desc_detail_received %></td>
+            <td>:</td>
+            <td><b><%= report.phone %></b></td>
+        </tr>
+        <tr>
+            <td><%= lingua.log_api_page.desc_detail_status %></td>
+            <td>:</td>
+            <td><b><%- status_msg %></b></td>
+        </tr>
+        <tr>
+            <td><%= lingua.log_api_page.desc_detail_data %></td>
+            <td>:</td>
+            <td><%= JSON.stringify(report.rawdata) %></td>
+        </tr>
+    </table>
+</div>
+<% if(report?.statusHistory){
+    var resultsWaWeb = [];    
+%>
+<h5><%= lingua.log_api_page.desc_title_history %></h5>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tr>
+            <td><%= lingua.log_api_page.desc_ack_history %></td>
+            <td><%= lingua.log_api_page.desc_status_history %></td>
+            <td><%= lingua.log_api_page.desc_time_history %></td>
+        </tr>
+<%
+    for(var i=0; i < report.statusHistory.length; i++){
+        if(report.statusHistory[i].type == "message_ack"){
+            if (report.statusHistory[i].status == 1){
+                status_msg_history = '<span class="badge badge-warning"><i class="far fa-clock"></i> ' + lingua.log_device_backend.desc_pending + ' </span>'
+            }
+            else if (report.statusHistory[i].status == 2){
+                status_msg_history = '<span class="badge badge-info"><i class="fas fa-check"></i> ' + lingua.log_device_backend.desc_delivered + ' </span>'
+            }
+            else if (report.statusHistory[i].status == 3){
+                status_msg_history = '<span class="badge badge-primary"><i class="fas fa-check-double"></i> ' + lingua.log_device_backend.desc_received + ' </span>'
+            }
+            else if (report.statusHistory[i].status == 4){
+                status_msg_history = '<span class="badge badge-success"><i class="fas fa-check-circle"></i> <i class="fas fa-check-double"></i> ' + lingua.log_device_backend.desc_read + ' </span>'
+            }
+            else{
+                status_msg_history = '<span class="badge badge-success"><i class="fas fa-check-circle"></i> <i class="fas fa-check-double"></i> ' + lingua.log_device_backend.desc_read + ' </span>'
+            }
+    
+%>
+    <tr>
+        <td>
+            <%- report.statusHistory[i].status %>
+        </td>
+        <td>
+            <%- status_msg_history %>
+        </td>
+        <td>
+            <%- moment(report.statusHistory[i].time).format('DD MMMM YYYY HH:mm:ss') %>
+        </td>
+    </tr>
+
+<%
+        } else {
+            resultsWaWeb.push(report.statusHistory[i])
+        }
+    }
+%>
+</table>
+<%
+}
+%>
+<!-- For whatsapp web -->
+<% if(report?.statusHistory && resultsWaWeb.length != 0){ %>
+<h5><%= lingua.log_api_page.desc_title_history_waweb %></h5>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tr>
+            <td><%= lingua.log_api_page.desc_ack_history %></td>
+            <td><%= lingua.log_api_page.desc_status_history %></td>
+            <td><%= lingua.log_api_page.desc_time_history %></td>
+        </tr>
+<%
+    for(var i=0; i < resultsWaWeb.length; i++){
+        if (report.statusHistory[i].status == 1){
+            status_msg_history = '<span class="badge badge-warning"><i class="far fa-clock"></i> ' + lingua.log_device_backend.desc_pending + ' </span>'
+        }
+        else if (resultsWaWeb[i].status == 2){
+            status_msg_history = '<span class="badge badge-info"><i class="fas fa-check"></i> ' + lingua.log_device_backend.desc_delivered + ' </span>'
+        }
+        else if (resultsWaWeb[i].status == 3){
+            status_msg_history = '<span class="badge badge-primary"><i class="fas fa-check-double"></i> ' + lingua.log_device_backend.desc_received + ' </span>'
+        }
+        else if (resultsWaWeb[i].status == 4){
+            status_msg_history = '<span class="badge badge-success"><i class="fas fa-check-circle"></i> <i class="fas fa-check-double"></i> ' + lingua.log_device_backend.desc_read + ' </span>'
+        }
+        else{
+            status_msg_history = '<span class="badge badge-success"><i class="fas fa-check-circle"></i> <i class="fas fa-check-double"></i> ' + lingua.log_device_backend.desc_read + ' </span>'
+        }
+%>
+    <tr>
+        <td>
+            <%- resultsWaWeb[i].status %>
+        </td>
+        <td>
+            <%- status_msg_history %>
+        </td>
+        <td>
+            <%- moment(resultsWaWeb[i].time).format('DD MMMM YYYY HH:mm:ss') %>
+        </td>
+    </tr>
+
+<%
+    }
+%>
+</table>
+<%
+}
+%>

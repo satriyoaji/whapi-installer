@@ -1,0 +1,167 @@
+<div class="row">
+    <div class="col-md-12">
+       <div class="card user-card">
+          <div class="card-body">
+            <h2><%= lingua.detail_account_page.title %></h2>
+            <form id="account" method="post">
+               <div class="row">
+                   <div class="col-md">
+                     <div class="form-group">
+                       <label><%= lingua.register_page.form_name1 %></label>
+                       <input class="form-control" value="<%= detailUser.name.firstName %>" type="text" name="firstName">
+                     </div>
+                     <div class="form-group">
+                       <label><%= lingua.register_page.form_name2 %></label>
+                       <input class="form-control" value="<%= detailUser.name.lastName %>" type="text" name="lastName">
+                     </div>
+                     <div class="form-group">
+                       <label><%= lingua.register_page.form_username %></label>
+                       <p><%= detailUser.login.username %></p>
+                     </div>
+                     <div class="form-group">
+                      <label><%= lingua.register_page.form_phone %></label>
+                      <input class="form-control" value="<%= detailUser.phone %>" type="text" name="phone">
+                    </div>
+                    <div class="form-group">
+                      <label><%= lingua.register_page.form_email %></label>
+                      <input class="form-control" value="<%= detailUser.email %>" type="text" name="email">
+                    </div>
+                   </div>
+                   <div class="col-md">
+                     <div class="form-group">
+                       <label><%= lingua.register_page.form_company %></label>
+                       <input class="form-control" value="<%= detailUser.company %>" type="text" name="company">
+                     </div>
+                     <div class="form-group">
+                       <label><%= lingua.register_page.form_country %></label>
+                       <input class="form-control" value="<%= detailUser.country %>" type="text" name="country">
+                     </div>
+                     <div class="form-group">
+                       <label><%= lingua.register_page.form_zipcode %></label>
+                       <input class="form-control" value="<%= detailUser.zipcode %>" type="text" name="zip_code">
+                     </div>
+                     <div class="form-group">
+                       <label><%= lingua.register_page.form_address %></label>
+                       <textarea class="form-control" name="address"><%= detailUser.address %></textarea>
+                     </div>
+                   </div>
+               </div>
+               <div class="form-group">
+                  <button class="btn btn-lg btn-primary " type="submit"><%= lingua.detail_account_page.button_update %></button>
+               </div>
+             </form>
+             <h2><%= lingua.register_page.title_forgot %></h2>
+             <form id="change-password" method="post">
+              <div class="form-group">
+                <label><%= lingua.register_page.form_password %></label>
+                <input class="form-control" type="password" name="password" id="password">
+              </div>
+              <div class="form-group">
+                <label><%= lingua.register_page.form_c_password %></label>
+                <input class="form-control" type="password" name="con_password" id="con_password">
+              </div>
+              <div class="form-group">
+                <button class="btn btn-lg btn-primary" type="submit"><%= lingua.detail_account_page.button_change_password %></button>
+             </div>
+             </form>
+         </div>
+       </div>
+    </div>
+</div>
+<script>
+  $('#account').validate({
+    rules: {
+      firstName: {
+        required: true
+      },
+      username: {
+        required: true,
+        minlength: 5
+      },
+      email:{
+        required: true,
+        email: true
+      },
+      phone: {
+        required: true,
+        number: true
+      },
+      zip_code: {
+        number: true
+      }
+    },
+    messages: {
+      firstName: {
+        required: '<%= lingua.register_page.validate_name1 %>'
+      },
+      username: {
+        required: '<%= lingua.register_page.validate_username_1 %>',
+        minlength: '<%= lingua.register_page.validate_username_2 %>'
+      },
+      email:{
+        required: '<%= lingua.register_page.validate_email_1 %>',
+        email: '<%= lingua.register_page.validate_email_2 %>'
+      },
+      phone: {
+        required: '<%= lingua.register_page.validate_phone_1 %>',
+        number: '<%= lingua.register_page.validate_phone_2 %>'
+      },
+      zip_code: {
+        number: '<%= lingua.register_page.validate_zipcode_1 %>'
+      }
+    },
+    submitHandler: function(form) {
+      $.ajax({
+          type: 'POST',
+          url: '../user/changeInfoSubmit',
+          data: $('#account').serialize(),
+          success: function(e) {
+            loadToast('success', e.results.message);
+          },
+          error: function(xhr, status, error) {
+            loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+          }
+      });
+    }
+  });
+
+  $('#change-password').validate({
+    rules: {
+      password: {
+        required: true,
+        minlength: 5
+      },
+      con_password: {
+        required: true,
+        minlength: 5,
+        equalTo: '#password'
+      }
+    },
+    messages: {
+      password: {
+        required: '<%= lingua.register_page.validate_password_1 %>',
+        minlength: '<%= lingua.register_page.validate_password_2 %>'
+      },
+      con_password: {
+        required: '<%= lingua.register_page.validate_c_password_1 %>',
+        minlength: '<%= lingua.register_page.validate_c_password_2 %>',
+        equalTo: '<%= lingua.register_page.validate_c_password_3 %>'
+      }
+    },
+    submitHandler: function(form) {
+      $.ajax({
+          type: 'POST',
+          url: '../user/changePassword',
+          data: $('#change-password').serialize(),
+          success: function(e) {
+            $('#password').val('')
+            $('#con_password').val('')
+            loadToast('success', e.results.message);
+          },
+          error: function(xhr, status, error) {
+            loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText)
+          }
+      });
+    }
+  });
+</script>

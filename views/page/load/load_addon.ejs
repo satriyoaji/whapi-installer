@@ -1,0 +1,18 @@
+<%
+    var b = 1;
+    for(var i=0; i < data.length; i++){
+    if(lang == 'id_ID'){
+        a = data[i].des_id
+    }
+    else{
+        a = data[i].des_en
+    }
+%>
+<tr>
+    <td><%- b %></td>
+    <td><%- a %></td>
+    <td><%- (data[i].type_addon == 1 ? 'Free' : 'Paid') %></td>
+</tr>
+<%
+    b++}
+%>

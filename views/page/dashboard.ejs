@@ -1,0 +1,130 @@
+<div class="row">
+   <div class="col-md-8">
+      <div class="row">
+         <div class="col-md-12">
+            <div class="card user-card mb-3" style="border-left: 5px solid #000000">
+               <div class="card-body">
+                  <h5><%= lingua.dashboard_page.desc_hello %>, <%= detailUser.name.firstName + ' ' + detailUser.name.lastName %></h5>
+               </div>
+            </div>
+         </div>
+         <div class="col-md-3">
+            <div class="card user-card mb-3" style="border-top: 5px solid yellow">
+               <div class="card-body"><h5>Pending</h5><b id="ack_1">0</b></div>
+            </div>
+         </div>
+         <div class="col-md-3">
+            <div class="card user-card mb-3" style="border-top: 5px solid blue">
+               <div class="card-body"><h5>Sending</h5><b id="ack_2">0</b></div>
+            </div>
+         </div>
+         <div class="col-md-3">
+            <div class="card user-card mb-3" style="border-top: 5px solid grey">
+               <div class="card-body"><h5>Delivered</h5><b id="ack_3">0</b></div>
+            </div>
+         </div>
+         <div class="col-md-3">
+            <div class="card user-card mb-3" style="border-top: 5px solid green">
+               <div class="card-body"><h5>Read</h5><b id="ack_4">0</b></div>
+            </div>
+         </div>
+         <div class="col-md-6">
+            <div class="card user-card mb-3" style="border-left: 5px solid #007bff">
+               <div class="card-body">
+                  <h5><i class="fad fa-mobile-alt"></i> <%= lingua.dashboard_page.desc_device %></h5>
+                  <div id="load_countdevice"><%= lingua.dashboard_page.desc_load_data %></div>
+               </div>
+            </div>
+            <div class="card user-card mb-3" style="border-left: 5px solid green">
+               <div class="card-body"><h5><i class="fad fa-certificate"></i> <%= lingua.dashboard_page.desc_license %></h5>
+                  <div id="load_date_exp"><%= lingua.dashboard_page.desc_load_data %></div>
+               </div>
+            </div>
+         </div>
+         <div class="col-md-6">
+            <div class="card user-card mb-3" style="border-left: 5px solid red">
+               <div class="card-body">
+                  <h5><i class="fad fa-memory"></i> <%= lingua.dashboard_page.desc_ram %></h5>
+                  <div id="load_ram_app"><%= lingua.dashboard_page.desc_load_data %></div>
+               </div>
+            </div>
+            <div class="card user-card mb-3" style="border-left: 5px solid yellow">
+               <div class="card-body">
+                  <h5><i class="fad fa-puzzle-piece"></i> <%= lingua.dashboard_page.desc_addon %></h5>
+                  1 / 1</p>
+                  <div class="progress mb-3">
+                     <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" style="width:100%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                   </div>
+                   <a href="/user/add-on" class="btn btn-outline-warning btn-block btn-sm"><%= lingua.dashboard_page.desc_addon_button %></a>
+               </div>
+            </div>
+         </div>
+         <div class="col-md-12">
+            <div class="card user-card mb-3">
+               <div class="card-body">
+                  <h5><i class="fas fa-badge-check"></i> <%= lingua.dashboard_page.desc_expired %></h5>
+                  <p id="load_latest_version"><%= lingua.dashboard_page.desc_load_data %></p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-md-4">
+      <div id="load_announcement" class="mb-3">
+         <div class="card user-card">
+            <div class="card-body">
+               <%= lingua.dashboard_page.desc_load_data %>
+            </div>
+         </div>
+      </div>
+      <div class="card user-card">
+         <div class="card-body">
+            <h5><i class="fad fa-life-ring"></i> <%= lingua.dashboard_page.desc_need_help_title %></h5>
+            <p><%= lingua.dashboard_page.desc_need_help %></p>
+            <a href="https://t.me/doveriz" class="btn btn-info btn-lg btn-block"><i class="fab fa-telegram"></i> Telegram</a>
+         </div>
+      </div>
+   </div>
+</div>
+ <script>
+
+$.get('../user/checkVersionApp', (e) => {
+   $('#load_latest_version').html(e)
+}).fail(function() {
+   loadToast('danger', "Error load page");
+})
+
+$.get('../user/ack-counter', (e) => {
+   $('#ack_1').html(e.results["1"])
+   $('#ack_2').html(e.results["2"])
+   $('#ack_3').html(e.results["3"])
+   $('#ack_4').html(e.results["4"])
+   console.log(e)
+}).fail(function() {
+   loadToast('danger', "Error load page");
+})
+
+$.get('../user/checkDateExpired', (e) => {
+   $('#load_date_exp').html(e)
+}).fail(function() {
+   loadToast('danger', "Error load license");
+})
+
+$.get('../user/checkRam', (e) => {
+   $('#load_ram_app').html(e)
+}).fail(function() {
+   loadToast('danger', "Error load RAM");
+})
+
+$.get('../user/checkDevice', (e) => {
+   $('#load_countdevice').html(e)
+}).fail(function() {
+   loadToast('danger', "Error load device");
+})
+
+$.get('../user/checkAnnouncement', (e) => {
+   $('#load_announcement').html(e)
+}).fail(function() {
+   loadToast('danger', "Error load announcement");
+})
+ </script>

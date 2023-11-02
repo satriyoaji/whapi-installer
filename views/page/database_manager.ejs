@@ -1,0 +1,123 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="alert alert-info" role="alert">
+            <%= lingua.database_manager.desc_info %>
+        </div>
+    </div>
+    <div class="col-md-6">
+       <div class="card user-card">
+            <div class="card-body">
+                <h4><i class="fa fa-upload"></i> <%= lingua.database_manager.title_export %></h4>
+                <hr/>
+                <div class="alert alert-secondary" role="alert">
+                    <label><b><%= lingua.database_manager.label_app %></b></label>
+                    <p><%= lingua.database_manager.label_desc %></p>
+                    <ol>
+                        <li><%= lingua.database_manager.label_feature_app_1 %></li>
+                        <li><%= lingua.database_manager.label_feature_app_2 %></li>
+                        <li><%= lingua.database_manager.label_feature_app_3 %></li>
+                        <li><%= lingua.database_manager.label_feature_app_4 %></li>
+                        <li><%= lingua.database_manager.label_feature_app_5 %></li>
+                        <li><%= lingua.database_manager.label_feature_app_6 %></li>
+                        <li><%= lingua.database_manager.label_feature_app_7 %></li>
+                        <li><%= lingua.database_manager.label_feature_app_8 %></li>
+                        <li><%= lingua.database_manager.label_feature_app_9 %></li>
+                    </ol>
+                    <input type="button" onclick="download('db_app')" class="btn btn-primary btn-block" value="<%= lingua.database_manager.btn_export %>"/>
+                </div>
+                <div class="alert alert-secondary" role="alert">
+                    <label><b><%= lingua.database_manager.label_wa %></b></label>
+                    <p><%= lingua.database_manager.label_desc %></p>
+                    <ol>
+                        <li><%= lingua.database_manager.label_feature_wa_1 %></li>
+                        <li><%= lingua.database_manager.label_feature_wa_2 %></li>
+                    </ol>
+                    <input type="button" onclick="download('db_whatsapp')" class="btn btn-primary btn-block" value="<%= lingua.database_manager.btn_export %>"/>
+                </div>
+                <div class="alert alert-secondary" role="alert">
+                    <label><b><%= lingua.database_manager.label_session %></b></label>
+                    <p><%= lingua.database_manager.label_desc %></p>
+                    <ol>
+                        <li><%= lingua.database_manager.label_feature_session_1 %></li>
+                    </ol>
+                    <input type="button" onclick="download('db_session')" class="btn btn-primary btn-block" value="<%= lingua.database_manager.btn_export %>"/>
+                </div>
+            </div>
+       </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card user-card">
+             <div class="card-body">
+                <h4><i class="fa fa-download"></i> <%= lingua.database_manager.title_import %></h4>
+                <hr/>
+                <div class="alert alert-secondary" role="alert">
+                    <label><b><%= lingua.database_manager.label_import_app %></b></label><br/>
+                    <div class="form-group">
+                        <input type="file" id="db_app" name="db_app"/>
+                    </div>
+                    <input type="button" onclick="upload('db_app')" class="btn btn-primary btn-block" value="<%= lingua.database_manager.btn_import %>"/>
+                </div>
+                <div class="alert alert-secondary" role="alert">
+                    <label><b><%= lingua.database_manager.label_import_wa %></b></label><br/>
+                    <div class="form-group">
+                        <input type="file" id="db_whatsapp" name="db_whatsapp"/>
+                    </div>
+                    <input type="button" onclick="upload('db_whatsapp')" class="btn btn-primary btn-block" value="<%= lingua.database_manager.btn_import %>"/>
+                </div>
+                <div class="alert alert-secondary" role="alert">
+                    <label><b><%= lingua.database_manager.label_import_session %></b></label><br/>
+                    <div class="form-group">
+                        <input type="file" id="db_session" name="db_session"/>
+                    </div>
+                    <input type="button" onclick="upload('db_session')" class="btn btn-primary btn-block" value="<%= lingua.database_manager.btn_import %>"/>
+                </div>
+             </div>
+        </div>
+     </div>
+</div>
+
+<script>
+
+function upload(form){
+    var fd = new FormData();
+    var files = $('#' + form)[0].files;
+    if(files.length > 0 ){
+        fd.append(form, files[0]);
+        fd.append('type_upload', form);
+        $.ajax({
+            url: 'uploadDatabase',
+            type: 'post',
+            data: fd,
+            contentType: false,
+            processData: false,
+            success: function(response){
+                loadToast('success', "Database berhasil diimport");
+            },
+        });
+    } else{
+        loadToast('danger', "<%= lingua.file_media_page.desc_required_upload %>");
+    }
+}
+
+var processdown = []
+function download(form) {
+    if(processdown.includes(form)) {
+        loadToast('danger', "Backup is processing");
+        return;
+    }
+    processdown.push(form)
+    $.ajax({
+        url: 'downloadDatabase',
+        type: 'post',
+        data: { type_download: form },
+        success: function(response){
+            processdown.splice(processdown.indexOf(form), 1);
+            window.open('../' + response.file);
+        },
+        error: function(xhr, status, error) {
+            processdown.splice(processdown.indexOf(form), 1);
+            loadToast('danger', "Ada error : xhr = " + xhr.status + ' | pesan = ' + xhr.statusText);
+        }
+    });
+}
+</script>
